@@ -3,11 +3,13 @@ import path from "node:path";
 import { Router } from "express";
 import multer from "multer";
 
-import { Product } from "./app/models/Product";
 import { listCategories } from "./app/useCases/categories/listCategories";
 import { createCategory } from "./app/useCases/categories/createCategory";
 import { listProducts } from "./app/useCases/products/listProducts";
 import { createProducts } from "./app/useCases/products/createProducts";
+import { listProductsByCategory } from "./app/useCases/categories/listProductsByCategory";
+import { listOrders } from "./app/useCases/orders/listOrders";
+import { createOrder } from "./app/useCases/orders/createOrder";
 
 export const router = Router();
 
@@ -30,24 +32,11 @@ router.get("/products", listProducts);
 
 router.post("/products", upload.single("image"), createProducts);
 
-// Get products by category
+router.get("/categories/:categoryId/products", listProductsByCategory);
 
-router.get("/categories/:categoryId/products", async (req, res) => {
-  const products = await Product.find({ category: req.params.categoryId });
-  res.json(products);
-});
+router.get("/orders", listOrders);
 
-// List orders
-
-router.get("/orders", async (req, res) => {
-  res.json([]);
-});
-
-// Create order
-
-router.post("/orders", async (req, res) => {
-  res.json({});
-});
+router.post("/orders", createOrder);
 
 // Change order status
 
